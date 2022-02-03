@@ -18,4 +18,4 @@ The following order of running the scripts is suggested:
 5)  comparison_of_clusters_lcmm_git.R - compare lcmm clusters based on their features
 5a) comparison_of_clusters_multlcmm_git.R - compare multlcmm clusters based on their features
 
-
+LCMM analysis performed using lcmm package in R. https://cran.r-project.org/web/packages/lcmm/vignettes/introduction.html
