@@ -1,0 +1,960 @@
+
+
+library( LCTMtools )
+library(readxl)
+library( lcmm )
+library(knitr)
+
+data_df <- read_excel("long_melt_epds.xlsx")
+data_df <-data_df[c(2:4)]
+data_df$value <-data_df$value+1
+data_df$"EPDS"[data_df$"EPDS"=='EPDS_T0'] <- 3
+data_df$"EPDS"[data_df$"EPDS"=='EPDS_T1'] <- 6
+data_df$"EPDS"[data_df$"EPDS"=='EPDS_T2'] <- 9
+data_df$"EPDS"[data_df$"EPDS"=='EPDS_T3'] <- 12
+data_df$"EPDS"[data_df$"EPDS"=='EPDS_T4'] <- 15
+
+data_df$EPDS <- as.numeric(data_df$EPDS)
+data_df$index <- as.integer(data_df$index)
+data_df$value <- as.integer(data_df$value)
+m05tf_nr <- lcmm(fixed = value~1,
+                 mixture = ~ 1,
+                 random = ~ 1,
+                 ng = 5, nwg=TRUE,
+                 idiag = FALSE, 
+                 data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1,
+                                                                      
+                                                                      random = ~ 1,
+                                                                      ng = 1, 
+                                                                      idiag = FALSE, 
+                                                                      data = data.frame(data_df), subject = "index")) 
+m05tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1,
+                                       mixture = ~ 1,
+                                       random = ~ 1,
+                                       ng = 5, nwg=TRUE,
+                                       idiag = FALSE, 
+                                       data = data.frame(data_df), subject = "index"),
+                                  rep=100, maxiter=50, minit=lcmm(fixed = value~1,
+                                                                  random = ~ 1,
+                                                                  ng = 1, 
+                                                                  idiag = FALSE, 
+                                                                  data = data.frame(data_df), subject = "index"))
+
+
+m05ff_nr <- lcmm(fixed = value~1,
+                 mixture = ~ 1,
+                 random = ~ 1,
+                 ng = 5, nwg=FALSE,
+                 idiag = FALSE, 
+                 data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1,
+                                                                      
+                                                                      random = ~ 1,
+                                                                      ng = 1, 
+                                                                      idiag = FALSE, 
+                                                                      data = data.frame(data_df), subject = "index")) 
+m05ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1,
+                                       mixture = ~ 1,
+                                       random = ~ 1,
+                                       ng = 5, nwg=FALSE,
+                                       idiag = FALSE, 
+                                       data = data.frame(data_df), subject = "index"),
+                                  rep=100, maxiter=50, minit=lcmm(fixed = value~1,
+                                                                  random = ~ 1,
+                                                                  ng = 1, 
+                                                                  idiag = FALSE, 
+                                                                  data = data.frame(data_df), subject = "index"))
+
+
+
+m05ft_nr <- lcmm(fixed = value~1,
+                 mixture = ~ 1,
+                 random = ~ 1,
+                 ng = 5, nwg=FALSE,
+                 idiag = TRUE, 
+                 data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1,
+                                                                      
+                                                                      random = ~ 1,
+                                                                      ng = 1, 
+                                                                      idiag = TRUE, data = data.frame(data_df), subject = "index"))
+
+m05ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1,
+                                       mixture = ~ 1,
+                                       random = ~ 1,
+                                       ng = 5, nwg=FALSE,
+                                       idiag = TRUE, 
+                                       data = data.frame(data_df), subject = "index"),
+                                  rep=100, maxiter=50, minit=lcmm(fixed = value~1,
+                                                                  random = ~ 1,
+                                                                  ng = 1, 
+                                                                  idiag = TRUE, 
+                                                                  data = data.frame(data_df), subject = "index"))
+m05tt_nr <- lcmm(fixed = value~1,
+                 mixture = ~ 1,
+                 random = ~ 1,
+                 ng = 5, nwg=TRUE,
+                 idiag = TRUE, 
+                 data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1,
+                                                                      random = ~ 1,
+                                                                      ng = 1, 
+                                                                      idiag = TRUE, 
+                                                                      data = data.frame(data_df), subject = "index")) 
+m05tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1,
+                                       mixture = ~ 1,
+                                       random = ~ 1,
+                                       ng = 5, nwg=TRUE,
+                                       idiag = TRUE, 
+                                       data = data.frame(data_df), subject = "index"),
+                                  rep=100, maxiter=50, minit=lcmm(fixed = value~1,
+                                                                  random = ~ 1,
+                                                                  ng = 1, 
+                                                                  idiag = TRUE, 
+                                                                  data = data.frame(data_df), subject = "index"))
+
+mLF5tf_nr <- lcmm(fixed = value~1+EPDS,
+                  mixture = ~ 1,
+                  random = ~ 1,
+                  ng = 5,nwg=TRUE,
+                  idiag = FALSE, 
+                  data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS,
+                                                                       random = ~ 1,
+                                                                       ng = 1, 
+                                                                       idiag = FALSE, 
+                                                                       data = data.frame(data_df), subject = "index")) 
+mLF5tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                        mixture = ~ 1,
+                                        random = ~ 1,
+                                        ng = 5,nwg=TRUE,
+                                        idiag = FALSE, 
+                                        data = data.frame(data_df), subject = "index"),
+                                   rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                   random = ~ 1,
+                                                                   ng = 1, 
+                                                                   idiag = FALSE, 
+                                                                   data = data.frame(data_df), subject = "index")) 
+mLF5ff_nr <- lcmm(fixed = value~1+EPDS,
+                  mixture = ~ 1,
+                  random = ~ 1,
+                  ng = 5,nwg=FALSE,
+                  idiag = FALSE, 
+                  data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS,
+                                                                       random = ~ 1,
+                                                                       ng = 1, 
+                                                                       idiag = FALSE, 
+                                                                       data = data.frame(data_df), subject = "index")) 
+mLF5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                        mixture = ~ 1,
+                                        random = ~ 1,
+                                        ng = 5,nwg=FALSE,
+                                        idiag = FALSE, 
+                                        data = data.frame(data_df), subject = "index"),
+                                   rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                   random = ~ 1,
+                                                                   ng = 1, 
+                                                                   idiag = FALSE, 
+                                                                   data = data.frame(data_df), subject = "index")) 
+mLF5ft_nr <- lcmm(fixed = value~1+EPDS,
+                  mixture = ~ 1,
+                  random = ~ 1,
+                  ng = 5,nwg=FALSE,
+                  idiag = TRUE, 
+                  data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS,
+                                                                       random = ~ 1,
+                                                                       ng = 1, 
+                                                                       idiag = TRUE, 
+                                                                       data = data.frame(data_df), subject = "index")) 
+mLF5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                        mixture = ~ 1,
+                                        random = ~ 1,
+                                        ng = 5,nwg=FALSE,
+                                        idiag = TRUE, 
+                                        data = data.frame(data_df), subject = "index"),
+                                   rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                   random = ~ 1,
+                                                                   ng = 1, 
+                                                                   idiag = TRUE, 
+                                                                   data = data.frame(data_df), subject = "index")) 
+mLF5tt_nr <- lcmm(fixed = value~1+EPDS,
+                  mixture = ~ 1,
+                  random = ~ 1,
+                  ng = 5,nwg=TRUE,
+                  idiag = TRUE, 
+                  data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS,
+                                                                       random = ~ 1,
+                                                                       ng = 1, 
+                                                                       idiag = TRUE, 
+                                                                       data = data.frame(data_df), subject = "index")) 
+mLF5tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                        mixture = ~ 1,
+                                        random = ~ 1,
+                                        ng = 5,nwg=TRUE,
+                                        idiag = TRUE, 
+                                        data = data.frame(data_df), subject = "index"),
+                                   rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                   random = ~ 1,
+                                                                   ng = 1, 
+                                                                   idiag = TRUE, 
+                                                                   data = data.frame(data_df), subject = "index")) 
+
+mLFR5tf_nr <- lcmm(fixed = value~1+EPDS,
+                   mixture = ~ 1,
+                   random = ~ 1+EPDS,
+                   ng = 5,nwg=TRUE,
+                   idiag = FALSE, 
+                   data = data.frame(data_df), subject = "index",B= lcmm(fixed = value~1+EPDS,
+                                                                         random = ~ 1+EPDS,
+                                                                         ng = 1,
+                                                                         idiag = FALSE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+mLFR5tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                         mixture = ~ 1,
+                                         random = ~ 1+EPDS,
+                                         ng = 5,nwg=TRUE,
+                                         idiag = FALSE, 
+                                         data = data.frame(data_df), subject = "index"),
+                                    rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                    random = ~ 1+EPDS,
+                                                                    ng = 1, 
+                                                                    idiag = FALSE, 
+                                                                    data = data.frame(data_df), subject = "index")) 
+mLFR5ff_nr <- lcmm(fixed = value~1+EPDS,
+                   mixture = ~ 1,
+                   random = ~ 1+EPDS,
+                   ng = 5,nwg=FALSE,
+                   idiag = FALSE, 
+                   data = data.frame(data_df), subject = "index",B= lcmm(fixed = value~1+EPDS,
+                                                                         random = ~ 1+EPDS,
+                                                                         ng = 1,
+                                                                         idiag = FALSE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+mLFR5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                         mixture = ~ 1,
+                                         random = ~ 1+EPDS,
+                                         ng = 5,nwg=FALSE,
+                                         idiag = FALSE, 
+                                         data = data.frame(data_df), subject = "index"),
+                                    rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                    random = ~ 1+EPDS,
+                                                                    ng = 1, 
+                                                                    idiag = FALSE, 
+                                                                    data = data.frame(data_df), subject = "index")) 
+
+mLFR5ft_nr <- lcmm(fixed = value~1+EPDS,
+                   mixture = ~ 1,
+                   random = ~ 1+EPDS,
+                   ng = 5,nwg=FALSE,
+                   idiag = TRUE, 
+                   data = data.frame(data_df), subject = "index",B= lcmm(fixed = value~1+EPDS,
+                                                                         random = ~ 1+EPDS,
+                                                                         ng = 1,
+                                                                         idiag = TRUE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+mLFR5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                         mixture = ~ 1,
+                                         random = ~ 1+EPDS,
+                                         ng = 5,nwg=FALSE,
+                                         idiag = TRUE, 
+                                         data = data.frame(data_df), subject = "index"),
+                                    rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                    random = ~ 1+EPDS,
+                                                                    ng = 1, 
+                                                                    idiag = TRUE, 
+                                                                    data = data.frame(data_df), subject = "index")) 
+
+mLFR5tt_nr <- lcmm(fixed = value~1+EPDS,
+                   mixture = ~ 1,
+                   random = ~ 1+EPDS,
+                   ng = 5,nwg=TRUE,
+                   idiag = TRUE, 
+                   data = data.frame(data_df), subject = "index",B= lcmm(fixed = value~1+EPDS,
+                                                                         random = ~ 1+EPDS,
+                                                                         ng = 1,
+                                                                         idiag = TRUE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+mLFR5tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                         mixture = ~ 1,
+                                         random = ~ 1+EPDS,
+                                         ng = 5,nwg=TRUE,
+                                         idiag = TRUE, 
+                                         data = data.frame(data_df), subject = "index"),
+                                    rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                    random = ~ 1+EPDS,
+                                                                    ng = 1, 
+                                                                    idiag = TRUE, 
+                                                                    data = data.frame(data_df), subject = "index")) 
+
+
+
+mLFM5tf_nr <- lcmm(fixed = value~1+EPDS,
+                   mixture = ~ 1+EPDS,
+                   random = ~ 1,
+                   ng = 5,nwg=TRUE,
+                   idiag = FALSE, 
+                   data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS,
+                                                                        random = ~ 1,
+                                                                        ng = 1,
+                                                                        idiag = FALSE, 
+                                                                        data = data.frame(data_df), subject = "index"))
+
+mLFM5tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                         mixture = ~ 1+EPDS,
+                                         random = ~ 1,
+                                         ng = 5,nwg=TRUE,
+                                         idiag = FALSE, 
+                                         data = data.frame(data_df), subject = "index"),
+                                    rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                    random = ~ 1,
+                                                                    ng = 1, 
+                                                                    idiag = FALSE, 
+                                                                    data = data.frame(data_df), subject = "index")) 
+
+mLFM5ff_nr <- lcmm(fixed = value~1+EPDS,
+                   mixture = ~ 1+EPDS,
+                   random = ~ 1,
+                   ng = 5,nwg=FALSE,
+                   idiag = FALSE, 
+                   data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS,
+                                                                        random = ~ 1,
+                                                                        ng = 1,
+                                                                        idiag = FALSE, 
+                                                                        data = data.frame(data_df), subject = "index"))
+
+mLFM5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                         mixture = ~ 1+EPDS,
+                                         random = ~ 1,
+                                         ng = 5,nwg=FALSE,
+                                         idiag = FALSE, 
+                                         data = data.frame(data_df), subject = "index"),
+                                    rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                    random = ~ 1,
+                                                                    ng = 1, 
+                                                                    idiag = FALSE, 
+                                                                    data = data.frame(data_df), subject = "index")) 
+mLFM5ft_nr <- lcmm(fixed = value~1+EPDS,
+                   mixture = ~ 1+EPDS,
+                   random = ~ 1,
+                   ng = 5,nwg=FALSE,
+                   idiag = TRUE, 
+                   data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS,
+                                                                        random = ~ 1,
+                                                                        ng = 1,
+                                                                        idiag = TRUE, 
+                                                                        data = data.frame(data_df), subject = "index"))
+
+mLFM5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                         mixture = ~ 1+EPDS,
+                                         random = ~ 1,
+                                         ng = 5,nwg=FALSE,
+                                         idiag = TRUE, 
+                                         data = data.frame(data_df), subject = "index"),
+                                    rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                    random = ~ 1,
+                                                                    ng = 1, 
+                                                                    idiag = TRUE, 
+                                                                    data = data.frame(data_df), subject = "index")) 
+mLFM5tt_nr <- lcmm(fixed = value~1+EPDS,
+                   mixture = ~ 1+EPDS,
+                   random = ~ 1,
+                   ng = 5,nwg=TRUE,
+                   idiag = TRUE, 
+                   data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS,
+                                                                        random = ~ 1,
+                                                                        ng = 1,
+                                                                        idiag = TRUE, 
+                                                                        data = data.frame(data_df), subject = "index"))
+
+mLFM5tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                         mixture = ~ 1+EPDS,
+                                         random = ~ 1,
+                                         ng = 5,nwg=TRUE,
+                                         idiag = TRUE, 
+                                         data = data.frame(data_df), subject = "index"),
+                                    rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                    random = ~ 1,
+                                                                    ng = 1, 
+                                                                    idiag = TRUE, 
+                                                                    data = data.frame(data_df), subject = "index")) 
+
+
+mLFRM5tf_nr <- lcmm(fixed = value~1+EPDS,
+                    mixture = ~ 1+EPDS,
+                    random = ~ 1+EPDS,
+                    ng = 5,nwg=TRUE,
+                    idiag = FALSE, 
+                    data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS,
+                                                                          random = ~ 1+EPDS,
+                                                                          ng = 1,
+                                                                          idiag = FALSE, 
+                                                                          data = data.frame(data_df), subject = "index")) 
+mLFRM5tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                          mixture = ~ 1+EPDS,
+                                          random = ~ 1+EPDS,
+                                          ng = 5,nwg=TRUE,
+                                          idiag = FALSE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                                                                          random = ~ 1+EPDS,
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = FALSE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+mLFRM5ff_nr <- lcmm(fixed = value~1+EPDS,
+                    mixture = ~ 1+EPDS,
+                    random = ~ 1+EPDS,
+                    ng = 5,nwg=FALSE,
+                    idiag = FALSE, 
+                    data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS,
+                                                                          random = ~ 1+EPDS,
+                                                                          ng = 1,
+                                                                          idiag = FALSE, 
+                                                                          data = data.frame(data_df), subject = "index")) 
+mLFRM5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                          mixture = ~ 1+EPDS,
+                                          random = ~ 1+EPDS,
+                                          ng = 5,nwg=FALSE,
+                                          idiag = FALSE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                                                                          random = ~ 1+EPDS,
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = FALSE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+mLFRM5ft_nr <- lcmm(fixed = value~1+EPDS,
+                    mixture = ~ 1+EPDS,
+                    random = ~ 1+EPDS,
+                    ng = 5,nwg=FALSE,
+                    idiag = TRUE, 
+                    data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS,
+                                                                          random = ~ 1+EPDS,
+                                                                          ng = 1,
+                                                                          idiag = TRUE, 
+                                                                          data = data.frame(data_df), subject = "index")) 
+mLFRM5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                          mixture = ~ 1+EPDS,
+                                          random = ~ 1+EPDS,
+                                          ng = 5,nwg=FALSE,
+                                          idiag = TRUE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                                                                          random = ~ 1+EPDS,
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = TRUE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+mLFRM5tt_nr <- lcmm(fixed = value~1+EPDS,
+                    mixture = ~ 1+EPDS,
+                    random = ~ 1+EPDS,
+                    ng = 5,nwg=TRUE,
+                    idiag = TRUE, 
+                    data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS,
+                                                                          random = ~ 1+EPDS,
+                                                                          ng = 1,
+                                                                          idiag = TRUE, 
+                                                                          data = data.frame(data_df), subject = "index")) 
+mLFRM5tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS,
+                                          mixture = ~ 1+EPDS,
+                                          random = ~ 1+EPDS,
+                                          ng = 5,nwg=TRUE,
+                                          idiag = TRUE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS,
+                                                                                                                          random = ~ 1+EPDS,
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = TRUE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+
+mQF5ff_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                  mixture = ~ 1,
+                  random = ~ 1,
+                  ng = 5,
+                  idiag = FALSE, 
+                  data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                       random = ~ 1,
+                                                                       ng = 1,
+                                                                       idiag = FALSE, 
+                                                                       data = data.frame(data_df), subject = "index") )
+mQF5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                        mixture = ~ 1,
+                                        random = ~ 1,
+                                        ng = 5,
+                                        idiag = FALSE, 
+                                        data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                        random = ~ 1,
+                                                                                                                        ng = 1,
+                                                                                                                        idiag = FALSE, 
+                                                                                                                        data = data.frame(data_df), subject = "index") )
+
+
+mQF5ft_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                  mixture = ~ 1,
+                  random = ~ 1,
+                  ng = 5,
+                  idiag = TRUE, 
+                  data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                       random = ~ 1,
+                                                                       ng = 1,
+                                                                       idiag = TRUE, 
+                                                                       data = data.frame(data_df), subject = "index") )
+
+mQF5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                        mixture = ~ 1,
+                                        random = ~ 1,
+                                        ng = 5,
+                                        idiag = TRUE, 
+                                        data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                        random = ~ 1,
+                                                                                                                        ng = 1,
+                                                                                                                        idiag = TRUE, 
+                                                                                                                        data = data.frame(data_df), subject = "index") )
+
+mQFLR5tf_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1,
+                    random = ~ 1+EPDS,
+                    ng = 5,nwg=TRUE,
+                    idiag = FALSE, 
+                    data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                          random = ~ 1+EPDS,ng = 1,
+                                                                          idiag = FALSE, 
+                                                                          data = data.frame(data_df), subject = "index") )
+
+mQFLR5tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1,
+                                          random = ~ 1+EPDS,
+                                          ng = 5,nwg=TRUE,
+                                          idiag = FALSE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit= lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                           random = ~ 1+EPDS,ng = 1,
+                                                                                                                           idiag = FALSE, 
+                                                                                                                           data = data.frame(data_df), subject = "index") )
+
+mQFLR5ff_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1,
+                    random = ~ 1+EPDS,
+                    ng = 5,nwg=FALSE,
+                    idiag = FALSE, 
+                    data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                          random = ~ 1+EPDS,ng = 1,
+                                                                          idiag = FALSE, 
+                                                                          data = data.frame(data_df), subject = "index") )
+
+mQFLR5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1,
+                                          random = ~ 1+EPDS,
+                                          ng = 5,nwg=FALSE,
+                                          idiag = FALSE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit= lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                           random = ~ 1+EPDS,ng = 1,
+                                                                                                                           idiag = FALSE, 
+                                                                                                                           data = data.frame(data_df), subject = "index") )
+
+
+mQFLR5ft_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1,
+                    random = ~ 1+EPDS,
+                    ng = 5,nwg=FALSE,
+                    idiag = TRUE, 
+                    data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                          random = ~ 1+EPDS,ng = 1,
+                                                                          idiag = TRUE, 
+                                                                          data = data.frame(data_df), subject = "index") )
+mQFLR5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1,
+                                          random = ~ 1+EPDS,
+                                          ng = 5,nwg=FALSE,
+                                          idiag = TRUE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit= lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                           random = ~ 1+EPDS,ng = 1,
+                                                                                                                           idiag = TRUE, 
+                                                                                                                           data = data.frame(data_df), subject = "index") )
+
+mQFLR5tt_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1,
+                    random = ~ 1+EPDS,
+                    ng = 5,nwg=TRUE,
+                    idiag = TRUE, 
+                    data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                          random = ~ 1+EPDS,ng = 1,
+                                                                          idiag = TRUE, 
+                                                                          data = data.frame(data_df), subject = "index") )
+mQFLR5tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1,
+                                          random = ~ 1+EPDS,
+                                          ng = 5,nwg=TRUE,
+                                          idiag = TRUE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit= lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                           random = ~ 1+EPDS,ng = 1,
+                                                                                                                           idiag = TRUE, 
+                                                                                                                           data = data.frame(data_df), subject = "index") )
+
+
+mQFQR5tf_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1,
+                    random = ~ 1+EPDS+I(EPDS^2),
+                    ng = 5,nwg=TRUE,
+                    idiag = FALSE, 
+                    data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                         random = ~ 1+EPDS+I(EPDS^2),
+                                                                         ng = 1,
+                                                                         idiag = FALSE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+
+
+mQFQR5tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1,
+                                          random = ~ 1+EPDS+I(EPDS^2),
+                                          ng = 5,nwg=TRUE,
+                                          idiag = FALSE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                          random = ~ 1+EPDS+I(EPDS^2),
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = FALSE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+
+
+mQFQR5ff_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1,
+                    random = ~ 1+EPDS+I(EPDS^2),
+                    ng = 5,nwg=FALSE,
+                    idiag = FALSE, 
+                    data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                         random = ~ 1+EPDS+I(EPDS^2),
+                                                                         ng = 1,
+                                                                         idiag = FALSE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+mQFQR5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1,
+                                          random = ~ 1+EPDS+I(EPDS^2),
+                                          ng = 5,nwg=FALSE,
+                                          idiag = FALSE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                          random = ~ 1+EPDS+I(EPDS^2),
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = FALSE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+mQFQR5ft_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1,
+                    random = ~ 1+EPDS+I(EPDS^2),
+                    ng = 5,nwg=FALSE,
+                    idiag = TRUE, 
+                    data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                         random = ~ 1+EPDS+I(EPDS^2),
+                                                                         ng = 1,
+                                                                         idiag = TRUE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+
+mQFQR5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1,
+                                          random = ~ 1+EPDS+I(EPDS^2),
+                                          ng = 5,nwg=FALSE,
+                                          idiag = TRUE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                          random = ~ 1+EPDS+I(EPDS^2),
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = TRUE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+mQFQR5tt_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1,
+                    random = ~ 1+EPDS+I(EPDS^2),
+                    ng = 5,nwg=TRUE,
+                    idiag = TRUE, 
+                    data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                         random = ~ 1+EPDS+I(EPDS^2),
+                                                                         ng = 1,
+                                                                         idiag = TRUE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+
+mQFQR5tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1,
+                                          random = ~ 1+EPDS+I(EPDS^2),
+                                          ng = 5,nwg=TRUE,
+                                          idiag = TRUE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                          random = ~ 1+EPDS+I(EPDS^2),
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = TRUE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+mQFQM5tf_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1+EPDS+I(EPDS^2),
+                    random = ~ 1,
+                    ng = 5,nwg=TRUE,
+                    idiag = FALSE, 
+                    data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                         random = ~ 1,
+                                                                         ng = 1,
+                                                                         idiag = FALSE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+
+mQFQM5tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1+EPDS+I(EPDS^2),
+                                          random = ~ 1,
+                                          ng = 5,nwg=TRUE,
+                                          idiag = FALSE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                          random = ~ 1,
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = FALSE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+
+
+mQFQM5ff_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1+EPDS+I(EPDS^2),
+                    random = ~ 1,
+                    ng = 5,nwg=FALSE,
+                    idiag = FALSE, 
+                    data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                         random = ~ 1,
+                                                                         ng = 1,
+                                                                         idiag = FALSE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+
+mQFQM5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1+EPDS+I(EPDS^2),
+                                          random = ~ 1,
+                                          ng = 5,nwg=FALSE,
+                                          idiag = FALSE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                          random = ~ 1,
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = FALSE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+mQFQM5ft_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1+EPDS+I(EPDS^2),
+                    random = ~ 1,
+                    ng = 5,nwg=FALSE,
+                    idiag = TRUE, 
+                    data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                         random = ~ 1,
+                                                                         ng = 1,
+                                                                         idiag = TRUE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+
+mQFQM5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1+EPDS+I(EPDS^2),
+                                          random = ~ 1,
+                                          ng = 5,nwg=FALSE,
+                                          idiag = TRUE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                          random = ~ 1,
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = TRUE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+mQFQM5tt_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                    mixture = ~ 1+EPDS+I(EPDS^2),
+                    random = ~ 1,
+                    ng = 5,nwg=TRUE,
+                    idiag = TRUE, 
+                    data = data.frame(data_df), subject = "index",B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                         random = ~ 1,
+                                                                         ng = 1,
+                                                                         idiag = TRUE, 
+                                                                         data = data.frame(data_df), subject = "index")) 
+
+mQFQM5tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                          mixture = ~ 1+EPDS+I(EPDS^2),
+                                          random = ~ 1,
+                                          ng = 5,nwg=TRUE,
+                                          idiag = TRUE, 
+                                          data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                          random = ~ 1,
+                                                                                                                          ng = 1,
+                                                                                                                          idiag = TRUE, 
+                                                                                                                          data = data.frame(data_df), subject = "index")) 
+
+
+
+mQFQMLR5tf_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                      mixture = ~ 1+EPDS+I(EPDS^2),
+                      random = ~ 1+EPDS,
+                      ng = 5,nwg=TRUE,
+                      idiag = FALSE, 
+                      data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                            random = ~ 1+EPDS,
+                                                                            ng = 1,
+                                                                            idiag = FALSE, 
+                                                                            data = data.frame(data_df), subject = "index")) 
+
+mQFQMLR5tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                            mixture = ~ 1+EPDS+I(EPDS^2),
+                                            random = ~ 1+EPDS,
+                                            ng = 5,nwg=TRUE,
+                                            idiag = FALSE, 
+                                            data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                            random = ~ 1+EPDS,
+                                                                                                                            ng = 1,
+                                                                                                                            idiag = FALSE, 
+                                                                                                                            data = data.frame(data_df), subject = "index")) 
+
+
+mQFQMLR5ff_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                      mixture = ~ 1+EPDS+I(EPDS^2),
+                      random = ~ 1+EPDS,
+                      ng = 5,nwg=FALSE,
+                      idiag = FALSE, 
+                      data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                            random = ~ 1+EPDS,
+                                                                            ng = 1,
+                                                                            idiag = FALSE, 
+                                                                            data = data.frame(data_df), subject = "index")) 
+mQFQMLR5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                            mixture = ~ 1+EPDS+I(EPDS^2),
+                                            random = ~ 1+EPDS,
+                                            ng = 5,nwg=FALSE,
+                                            idiag = FALSE, 
+                                            data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                            random = ~ 1+EPDS,
+                                                                                                                            ng = 1,
+                                                                                                                            idiag = FALSE, 
+                                                                                                                            data = data.frame(data_df), subject = "index")) 
+
+
+
+
+mQFQMLR5ft_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                      mixture = ~ 1+EPDS+I(EPDS^2),
+                      random = ~ 1+EPDS,
+                      ng = 5,nwg=FALSE,
+                      idiag = TRUE, 
+                      data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                            random = ~ 1+EPDS,
+                                                                            ng = 1,
+                                                                            idiag = TRUE, 
+                                                                            data = data.frame(data_df), subject = "index")) 
+
+
+mQFQMLR5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                            mixture = ~ 1+EPDS+I(EPDS^2),
+                                            random = ~ 1+EPDS,
+                                            ng = 5,nwg=FALSE,
+                                            idiag = TRUE, 
+                                            data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                            random = ~ 1+EPDS,
+                                                                                                                            ng = 1,
+                                                                                                                            idiag = TRUE, 
+                                                                                                                            data = data.frame(data_df), subject = "index")) 
+
+
+mQFQMLR5tt_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                      mixture = ~ 1+EPDS+I(EPDS^2),
+                      random = ~ 1+EPDS,
+                      ng = 5,nwg=TRUE,
+                      idiag = TRUE, 
+                      data = data.frame(data_df), subject = "index", B=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                            random = ~ 1+EPDS,
+                                                                            ng = 1,
+                                                                            idiag = TRUE, 
+                                                                            data = data.frame(data_df), subject = "index")) 
+mQFQMLR5tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                            mixture = ~ 1+EPDS+I(EPDS^2),
+                                            random = ~ 1+EPDS,
+                                            ng = 5,nwg=TRUE,
+                                            idiag = TRUE, 
+                                            data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                            random = ~ 1+EPDS,
+                                                                                                                            ng = 1,
+                                                                                                                            idiag = TRUE, data = data.frame(data_df), subject = "index"))
+
+mQFQMQR5tf_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                      mixture = ~ 1+EPDS+I(EPDS^2),
+                      random = ~ 1+EPDS+I(EPDS^2),
+                      ng = 5,nwg=TRUE,
+                      idiag = FALSE, 
+                      data = data.frame(data_df), subject = "index", B= lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                             random = ~ 1+EPDS+I(EPDS^2),
+                                                                             ng = 1,
+                                                                             idiag = FALSE, 
+                                                                             data = data.frame(data_df), subject = "index"))
+
+mQFQMQR5tf_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                            mixture = ~ 1+EPDS+I(EPDS^2),
+                                            random = ~ 1+EPDS+I(EPDS^2),
+                                            ng = 5,nwg=TRUE,
+                                            idiag = FALSE, 
+                                            data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                            random = ~ 1+EPDS+I(EPDS^2),
+                                                                                                                            ng = 1,
+                                                                                                                            idiag = FALSE, data = data.frame(data_df), subject = "index"))
+
+
+mQFQMQR5ff_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                      mixture = ~ 1+EPDS+I(EPDS^2),
+                      random = ~ 1+EPDS+I(EPDS^2),
+                      ng = 5,nwg=FALSE,
+                      idiag = FALSE, 
+                      data = data.frame(data_df), subject = "index", B= lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                             random = ~ 1+EPDS+I(EPDS^2),
+                                                                             ng = 1,
+                                                                             idiag = FALSE, 
+                                                                             data = data.frame(data_df), subject = "index"))
+
+mQFQMQR5ff_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                            mixture = ~ 1+EPDS+I(EPDS^2),
+                                            random = ~ 1+EPDS+I(EPDS^2),
+                                            ng = 5,nwg=FALSE,
+                                            idiag = FALSE, 
+                                            data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                            random = ~ 1+EPDS+I(EPDS^2),
+                                                                                                                            ng = 1,
+                                                                                                                            idiag = FALSE, data = data.frame(data_df), subject = "index"))
+
+mQFQMQR5ft_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                      mixture = ~ 1+EPDS+I(EPDS^2),
+                      random = ~ 1+EPDS+I(EPDS^2),
+                      ng = 5,nwg=FALSE,
+                      idiag = TRUE, 
+                      data = data.frame(data_df), subject = "index", B= lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                             random = ~ 1+EPDS+I(EPDS^2),
+                                                                             ng = 1,
+                                                                             idiag = TRUE, 
+                                                                             data = data.frame(data_df), subject = "index"))
+
+mQFQMQR5ft_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                            mixture = ~ 1+EPDS+I(EPDS^2),
+                                            random = ~ 1+EPDS+I(EPDS^2),
+                                            ng = 5,nwg=FALSE,
+                                            idiag = TRUE, 
+                                            data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                            random = ~ 1+EPDS+I(EPDS^2),
+                                                                                                                            ng = 1,
+                                                                                                                            idiag = TRUE, data = data.frame(data_df), subject = "index"))
+
+mQFQMQR5tt_nr <- lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                      mixture = ~ 1+EPDS+I(EPDS^2),
+                      random = ~ 1+EPDS+I(EPDS^2),
+                      ng = 5,nwg=TRUE,
+                      idiag = TRUE, 
+                      data = data.frame(data_df), subject = "index", B= lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                             random = ~ 1+EPDS+I(EPDS^2),
+                                                                             ng = 1,
+                                                                             idiag = TRUE, 
+                                                                             data = data.frame(data_df), subject = "index"))
+
+
+mQFQMQR5tt_nr_gridsearch <- gridsearch(lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                            mixture = ~ 1+EPDS+I(EPDS^2),
+                                            random = ~ 1+EPDS+I(EPDS^2),
+                                            ng = 5,nwg=TRUE,
+                                            idiag = TRUE, 
+                                            data = data.frame(data_df), subject = "index"), rep=100, maxiter=50, minit=lcmm(fixed = value~1+EPDS+I(EPDS^2),
+                                                                                                                            random = ~ 1+EPDS+I(EPDS^2),
+                                                                                                                            ng = 1,
+                                                                                                                            idiag = TRUE, data = data.frame(data_df), subject = "index"))
+
+summarytable(m05tf_nr,m05tf_nr_gridsearch,m05ff_nr,m05ff_nr_gridsearch,m05ft_nr,m05ft_nr_gridsearch,m05tt_nr,m05tt_nr_gridsearch,
+             mLF5tf_nr,mLF5tf_nr_gridsearch,mLF5ff_nr,mLF5ff_nr_gridsearch,mLF5ft_nr,mLF5ft_nr_gridsearch,mLF5tt_nr,mLF5tt_nr_gridsearch,
+             mLFR5tf_nr,mLFR5tf_nr_gridsearch,mLFR5ff_nr,mLFR5ff_nr_gridsearch,mLFR5ft_nr,mLFR5ft_nr_gridsearch,mLFR5tt_nr,mLFR5tt_nr_gridsearch,
+             mLFM5tf_nr,mLFM5tf_nr_gridsearch,mLFM5ff_nr,mLFM5ff_nr_gridsearch,mLFM5ft_nr,mLFM5ft_nr_gridsearch,mLFM5tt_nr,mLFM5tt_nr_gridsearch,
+             mLFRM5tf_nr,mLFRM5tf_nr_gridsearch,mLFRM5ff_nr,mLFRM5ff_nr_gridsearch,mLFRM5ft_nr,mLFRM5ft_nr_gridsearch,mLFRM5tt_nr,mLFRM5tt_nr_gridsearch,
+             mQF5ff_nr,mQF5ff_nr_gridsearch,mQF5ft_nr,mQF5ft_nr_gridsearch,
+             mQFLR5tf_nr,mQFLR5tf_nr_gridsearch,mQFLR5ff_nr,mQFLR5ff_nr_gridsearch,mQFLR5ft_nr,mQFLR5ft_nr_gridsearch,mQFLR5tt_nr,mQFLR5tt_nr_gridsearch,
+             mQFQR5tf_nr,mQFQR5tf_nr_gridsearch,mQFQR5ff_nr,mQFQR5ff_nr_gridsearch,mQFQR5ft_nr,mQFQR5ft_nr_gridsearch,mQFQR5tt_nr,mQFQR5tt_nr_gridsearch,
+             mQFQM5tf_nr,mQFQM5tf_nr_gridsearch,mQFQM5ff_nr,mQFQM5ff_nr_gridsearch,mQFQM5ft_nr,mQFQM5ft_nr_gridsearch,mQFQM5tt_nr,mQFQM5tt_nr_gridsearch,
+             mQFQMLR5tf_nr,mQFQMLR5tf_nr_gridsearch,mQFQMLR5ff_nr,mQFQMLR5ff_nr_gridsearch,mQFQMLR5ft_nr,mQFQMLR5ft_nr_gridsearch,mQFQMLR5tt_nr,mQFQMLR5tt_nr_gridsearch,
+             mQFQMQR5tf_nr,mQFQMQR5tf_nr_gridsearch,mQFQMQR5ff_nr,mQFQMQR5ff_nr_gridsearch,mQFQMQR5ft_nr,mQFQMQR5ft_nr_gridsearch,mQFQMQR5tt_nr,mQFQMQR5tt_nr_gridsearch, 
+             which = c("G", "loglik", "conv", "npm", "AIC", "BIC", "SABIC", "entropy", "%class"))->t5
+kable(t5, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover")) %>%
+  cat(., file = "m5_lcmm.html")
