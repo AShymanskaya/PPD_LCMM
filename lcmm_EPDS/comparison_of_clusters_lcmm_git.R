@@ -1,12 +1,13 @@
 
 
 
-#load data to perform compare clusters based on  
 library(finalfit)
 library(dplyr)
 library(mice)
 
 library(VIM)
+#load data to compare clusters based on their features 
+
 cl_6_lcmm <- read_excel("clusters_6_LCMM.xlsx")
 col_names_binary <- names(cl_6_lcmm[,c(3:7,13:16,23,25,26,30:36)])
 cl_6_lcmm[,col_names_binary] <- lapply(cl_6_lcmm[,col_names_binary] , factor)
